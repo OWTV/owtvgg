@@ -17,4 +17,7 @@ export default buildConfig({
 		migrationDir: "db/migrations",
 	}),
 	sharp,
+	typescript: {
+		outputFile: "src/shared/model/payload/types.d.ts",
+	},
 });
