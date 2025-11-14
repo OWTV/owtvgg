@@ -1,0 +1,35 @@
+name: PR Quality Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    concurrency:
+      group: ${{ github.ref }}-linting
+      cancel-in-progress: false
+    name: ✨ Check Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v5
+
+      - name: ⚡ Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: 📦 Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: 🦺 Check Type Safety
+        run: bun run check:tsc
+
+      - name: 📐 Check FSD Architecture
+        run: bun run check:fsd
+
+      - name: ✨ Check Linting and Formatting
+        run: bun run check:ci
+
+      - name: 🛠️ Check Build
+        run: bun run build
