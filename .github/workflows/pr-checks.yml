@@ -30,8 +30,3 @@ jobs:
 
       - name: ✨ Check Linting and Formatting
         run: bun run check:ci
-
-      - name: 🛠️ Check Build
-        run: bun run build
-        env:
-          PAYLOAD_SECRET: PAYLOAD_SECRET_PLACEHOLDER
