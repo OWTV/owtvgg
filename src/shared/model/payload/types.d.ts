@@ -72,6 +72,8 @@ export interface Config {
     accounts: Account;
     verifications: Verification;
     'admin-invitations': AdminInvitation;
+    players: Player;
+    teams: Team;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,6 +86,8 @@ export interface Config {
     accounts: AccountsSelect<false> | AccountsSelect<true>;
     verifications: VerificationsSelect<false> | VerificationsSelect<true>;
     'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>;
+    players: PlayersSelect<false> | PlayersSelect<true>;
+    teams: TeamsSelect<false> | TeamsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -149,6 +153,18 @@ export interface User {
    * The role of the user
    */
   role?: string | null;
+  favouritePlayers?: (number | Player)[] | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "players".
+ */
+export interface Player {
+  id: number;
+  name: string;
+  role: 'tank' | 'support' | 'damage' | 'flex';
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Sessions are active sessions for users. They are used to authenticate users with a session token
@@ -269,6 +285,17 @@ export interface AdminInvitation {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "teams".
+ */
+export interface Team {
+  id: number;
+  name: string;
+  players?: (number | Player)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -310,6 +337,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'admin-invitations';
         value: number | AdminInvitation;
+      } | null)
+    | ({
+        relationTo: 'players';
+        value: number | Player;
+      } | null)
+    | ({
+        relationTo: 'teams';
+        value: number | Team;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -365,6 +400,7 @@ export interface UsersSelect<T extends boolean = true> {
   createdAt?: T;
   updatedAt?: T;
   role?: T;
+  favouritePlayers?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -416,6 +452,26 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
   role?: T;
   token?: T;
   url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "players_select".
+ */
+export interface PlayersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "teams_select".
+ */
+export interface TeamsSelect<T extends boolean = true> {
+  name?: T;
+  players?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -24,4 +24,11 @@ export default defineConfig([
 			"fsd/repetitive-naming": "off",
 		},
 	},
+	{
+		// Temporarily disabled while we have slices that only contain collection
+		files: ["./src/entities/**"],
+		rules: {
+			"fsd/insignificant-slice": "off",
+		},
+	},
 ]);

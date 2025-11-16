@@ -4,13 +4,15 @@ import { nextCookies } from "better-auth/next-js";
 import { buildConfig } from "payload";
 import { betterAuthPlugin } from "payload-auth/better-auth";
 import sharp from "sharp";
+import { Players } from "@/entities/player";
+import { Teams } from "@/entities/team";
 
 const connectionString = process.env.STORAGE_POSTGRES_URL ?? "";
 const secret = process.env.PAYLOAD_SECRET ?? "";
 
 export default buildConfig({
 	editor: lexicalEditor(),
-	collections: [],
+	collections: [Players, Teams],
 	secret,
 	debug: true,
 	db: postgresAdapter({
@@ -43,7 +45,15 @@ export default buildConfig({
 				collectionOverrides: ({ collection }) => ({
 					...collection,
 					timestamps: true,
-					fields: [...collection.fields],
+					fields: [
+						...collection.fields,
+						{
+							name: "favouritePlayers",
+							type: "relationship",
+							relationTo: "players",
+							hasMany: true,
+						},
+					],
 				}),
 			},
 			accounts: {
