@@ -7,6 +7,4 @@ export type Payload = BasePayload & {
 	betterAuth: BetterAuthReturn<Array<ReturnType<typeof nextCookies>>>;
 };
 
-export const { api, handler } = (payload as Payload).betterAuth;
-
-export type Session = Awaited<ReturnType<typeof api.getSession>>;
+export const { api: auth, handler } = (payload as Payload).betterAuth;
