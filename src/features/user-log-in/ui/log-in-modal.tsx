@@ -1,12 +1,9 @@
 "use client";
 
-import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type ComponentProps, useActionState, useEffect } from "react";
-import { useFormStatus } from "react-dom";
-import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
 import {
+	Button,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -15,15 +12,15 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "@/shared/ui/dialog";
-import { Input } from "@/shared/ui/input";
-import { Label } from "@/shared/ui/label";
+	Input,
+	Label,
+} from "@/shared/ui/base";
+import { SubmitButton } from "@/shared/ui/form";
 import { logIn } from "../model/actions";
 
 export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 	const router = useRouter();
 	const [state, formAction] = useActionState(logIn, {});
-	const { pending } = useFormStatus();
 
 	useEffect(() => {
 		if (state.success) router.refresh();
@@ -74,14 +71,7 @@ export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 								Cancel
 							</Button>
 						</DialogClose>
-						<Button type="submit" disabled={pending} {...props}>
-							<span className={cn({ invisible: pending })}>Log In</span>
-							<LoaderCircle
-								className={cn("animate-spin invisible absolute", {
-									visible: pending,
-								})}
-							/>
-						</Button>
+						<SubmitButton>Log In</SubmitButton>
 					</DialogFooter>
 				</form>
 			</DialogContent>
