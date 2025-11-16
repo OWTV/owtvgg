@@ -10,7 +10,8 @@
 		"check": "biome check --write",
 		"check:ci": "biome ci .",
 		"check:fsd": "steiger ./src",
-		"check:tsc": "tsc --noEmit --skipLibCheck"
+		"check:tsc": "tsc --noEmit --skipLibCheck",
+		"postinstall": "lefthook install"
 	},
 	"dependencies": {
 		"@payloadcms/db-postgres": "3.63.0",
