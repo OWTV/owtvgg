@@ -14,8 +14,8 @@ import {
 	DialogTrigger,
 	Input,
 	Label,
-	SubmitButton,
-} from "@/shared/ui";
+} from "@/shared/ui/base";
+import { SubmitButton } from "@/shared/ui/form";
 import { signup } from "../model/actions";
 
 export function SignUpModal({ ...props }: ComponentProps<typeof Button>) {

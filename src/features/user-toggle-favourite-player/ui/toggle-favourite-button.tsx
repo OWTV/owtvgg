@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui";
+import { Button } from "@/shared/ui/base";
 import { toggleFavouritePlayer } from "../model/actions";
 
 type ToggleFavouriteButtonProps = {

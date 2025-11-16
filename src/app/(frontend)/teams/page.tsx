@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "@/entities/session";
 import type { Player } from "@/shared/model";
 import { payload } from "@/shared/model";
-import { Typography } from "@/shared/ui";
+import { Typography } from "@/shared/ui/base";
 import { TeamList } from "@/widgets/team-list";
 
 export default async function TeamsPage() {

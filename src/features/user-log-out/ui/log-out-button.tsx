@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { type ComponentProps, useActionState, useEffect } from "react";
-import type { Button } from "@/shared/ui";
-import { SubmitButton } from "@/shared/ui";
+import type { Button } from "@/shared/ui/base";
+import { SubmitButton } from "@/shared/ui/form";
 import { logout } from "../model/actions";
 
 export function LogOutButton(props: ComponentProps<typeof Button>) {

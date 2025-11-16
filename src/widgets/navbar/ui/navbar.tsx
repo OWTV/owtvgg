@@ -4,7 +4,7 @@ import type { Session } from "@/entities/session";
 import { LogInButton } from "@/features/user-log-in";
 import { LogOutButton } from "@/features/user-log-out";
 import { SignUpModal } from "@/features/user-sign-up";
-import { Avatar } from "@/shared/ui";
+import { Avatar } from "@/shared/ui/base";
 
 export function Navbar({ session }: { session: Session }) {
 	return (

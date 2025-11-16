@@ -2,7 +2,7 @@ import { isPlayer } from "@/entities/player";
 
 import { ToggleFavouriteButton } from "@/features/user-toggle-favourite-player";
 import type { Player, Team } from "@/shared/model";
-import { Card, CardContent, Typography } from "@/shared/ui";
+import { Card, CardContent, Typography } from "@/shared/ui/base";
 
 interface TeamListProps {
 	teams: Team[];
