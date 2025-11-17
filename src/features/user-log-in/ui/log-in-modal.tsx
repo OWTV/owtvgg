@@ -15,6 +15,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Field,
+	FieldError,
 	FieldGroup,
 	FieldLabel,
 	Input,
@@ -25,6 +26,9 @@ import { logIn } from "../model/actions";
 export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 	const router = useRouter();
 	const [state, formAction] = useActionState(logIn, ACTION_STATE);
+	const errors = state.errors?.properties;
+
+	console.debug("log-in-modal.tsx:32 > state", state);
 
 	useEffect(() => {
 		if (!state.success) return;
@@ -46,7 +50,7 @@ export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 						</DialogDescription>
 					</DialogHeader>
 
-					{state.success && state.message && (
+					{!state.success && state.message && (
 						<p className="text-sm font-medium text-destructive">
 							{state.message}
 						</p>
@@ -62,11 +66,21 @@ export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 								placeholder="name@example.com"
 								required
 							/>
+							<FieldError
+								errors={errors?.email?.errors?.map((msg) => ({
+									message: msg,
+								}))}
+							/>
 						</Field>
 
 						<Field>
-							<FieldLabel htmlFor="password">Password</FieldLabel>
+							<FieldLabel htmlFor="email">Password</FieldLabel>
 							<Input id="password" name="password" type="password" required />
+							<FieldError
+								errors={errors?.password?.errors?.map((msg) => ({
+									message: msg,
+								}))}
+							/>
 						</Field>
 					</FieldGroup>
 

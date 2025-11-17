@@ -4,14 +4,15 @@ import { constants } from "node:http2";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
-import type { ActionResult } from "@/shared/model";
+import type { ActionState } from "@/shared/config";
+
 import { auth } from "@/shared/model";
 import { LoginSchema } from "./schema";
 
 export async function logIn(
-	_prevState: ActionResult,
+	_prevState: ActionState<typeof LoginSchema>,
 	formData: FormData,
-): Promise<ActionResult> {
+): Promise<ActionState<typeof LoginSchema>> {
 	const validationResult = LoginSchema.safeParse(
 		Object.fromEntries(formData.entries()),
 	);
@@ -19,7 +20,7 @@ export async function logIn(
 	if (!validationResult.success) {
 		return {
 			success: false,
-			message: z.prettifyError(validationResult.error),
+			errors: z.treeifyError(validationResult.error),
 		};
 	}
 
