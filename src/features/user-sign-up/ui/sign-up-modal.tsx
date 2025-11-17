@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { type ComponentProps, useActionState, useEffect } from "react";
 import { toast } from "sonner";
-import { ACTION_STATE } from "@/shared/config";
 import {
 	Button,
 	Dialog,
@@ -15,6 +14,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Field,
+	FieldError,
 	FieldGroup,
 	FieldLabel,
 	Input,
@@ -24,7 +24,8 @@ import { signup } from "../model/actions";
 
 export function SignUpModal({ ...props }: ComponentProps<typeof Button>) {
 	const router = useRouter();
-	const [state, formAction] = useActionState(signup, ACTION_STATE);
+	const [state, formAction] = useActionState(signup, { success: null });
+	const errors = state.errors?.properties;
 
 	useEffect(() => {
 		if (!state.success) return;
@@ -62,6 +63,11 @@ export function SignUpModal({ ...props }: ComponentProps<typeof Button>) {
 								className="col-span-3"
 								required
 							/>
+							<FieldError
+								errors={errors?.name?.errors?.map((msg) => ({
+									message: msg,
+								}))}
+							/>
 						</Field>
 						<Field>
 							<FieldLabel htmlFor="email">Email</FieldLabel>
@@ -73,6 +79,11 @@ export function SignUpModal({ ...props }: ComponentProps<typeof Button>) {
 								className="col-span-3"
 								required
 							/>
+							<FieldError
+								errors={errors?.email?.errors?.map((msg) => ({
+									message: msg,
+								}))}
+							/>
 						</Field>
 						<Field>
 							<FieldLabel htmlFor="password">Password</FieldLabel>
@@ -83,6 +94,11 @@ export function SignUpModal({ ...props }: ComponentProps<typeof Button>) {
 								className="col-span-3"
 								required
 							/>
+							<FieldError
+								errors={errors?.password?.errors?.map((msg) => ({
+									message: msg,
+								}))}
+							/>
 						</Field>
 						<Field>
 							<FieldLabel htmlFor="confirm-password">Confirm</FieldLabel>
@@ -92,6 +108,11 @@ export function SignUpModal({ ...props }: ComponentProps<typeof Button>) {
 								type="password"
 								className="col-span-3"
 								required
+							/>
+							<FieldError
+								errors={errors?.confirmPassword?.errors?.map((msg) => ({
+									message: msg,
+								}))}
 							/>
 						</Field>
 					</FieldGroup>

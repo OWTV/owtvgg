@@ -2,13 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import type { ActionResult } from "@/shared/model";
+import type { ActionState } from "@/shared/model";
 import { auth } from "@/shared/model";
 
 export async function logout(
-	_prevState: ActionResult,
+	_prevState: ActionState,
 	_formData: FormData,
-): Promise<ActionResult> {
+): Promise<ActionState> {
 	const response = await auth.signOut({
 		headers: await headers(),
 		asResponse: true,

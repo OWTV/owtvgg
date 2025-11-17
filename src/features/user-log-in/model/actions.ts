@@ -4,7 +4,7 @@ import { constants } from "node:http2";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
-import type { ActionState } from "@/shared/config";
+import type { ActionState } from "@/shared/model";
 
 import { auth } from "@/shared/model";
 import { LoginSchema } from "./schema";

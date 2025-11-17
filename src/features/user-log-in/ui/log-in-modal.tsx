@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { type ComponentProps, useActionState, useEffect } from "react";
 import { toast } from "sonner";
-import { ACTION_STATE } from "@/shared/config";
 import {
 	Button,
 	Dialog,
@@ -25,10 +24,8 @@ import { logIn } from "../model/actions";
 
 export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 	const router = useRouter();
-	const [state, formAction] = useActionState(logIn, ACTION_STATE);
+	const [state, formAction] = useActionState(logIn, { success: null });
 	const errors = state.errors?.properties;
-
-	console.debug("log-in-modal.tsx:32 > state", state);
 
 	useEffect(() => {
 		if (!state.success) return;

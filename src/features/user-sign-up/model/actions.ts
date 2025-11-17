@@ -5,14 +5,14 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getServerSession } from "@/entities/session";
-import type { ActionResult } from "@/shared/model";
+import type { ActionState } from "@/shared/model";
 import { auth } from "@/shared/model";
 import { SignupSchema } from "./schema";
 
 export async function signup(
-	_prevState: ActionResult,
+	_prevState: ActionState<typeof SignupSchema>,
 	formData: FormData,
-): Promise<ActionResult> {
+): Promise<ActionState<typeof SignupSchema>> {
 	const session = await getServerSession();
 
 	if (session) {

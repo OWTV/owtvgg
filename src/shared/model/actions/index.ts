@@ -7,7 +7,3 @@ export type ActionState<T extends z.ZodTypeAny | null = null> = {
 	message?: string;
 	errors?: T extends z.ZodTypeAny ? TreeifiedError<z.infer<T>> : never;
 };
-
-export const ACTION_STATE: ActionState = {
-	success: null,
-};
