@@ -14,8 +14,10 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	Field,
+	FieldGroup,
+	FieldLabel,
 	Input,
-	Label,
 } from "@/shared/ui/base";
 import { SubmitButton } from "@/shared/ui/form";
 import { logIn } from "../model/actions";
@@ -50,25 +52,24 @@ export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 						</p>
 					)}
 
-					<div className="grid grid-cols-4 gap-4">
-						<Label htmlFor="email">Email</Label>
-						<Input
-							id="email"
-							name="email"
-							type="email"
-							placeholder="name@example.com"
-							className="col-span-3"
-							required
-						/>
-						<Label htmlFor="password">Password</Label>
-						<Input
-							id="password"
-							name="password"
-							type="password"
-							className="col-span-3"
-							required
-						/>
-					</div>
+					<FieldGroup>
+						<Field>
+							<FieldLabel htmlFor="email">Email</FieldLabel>
+							<Input
+								id="email"
+								name="email"
+								type="email"
+								placeholder="name@example.com"
+								required
+							/>
+						</Field>
+
+						<Field>
+							<FieldLabel htmlFor="password">Password</FieldLabel>
+							<Input id="password" name="password" type="password" required />
+						</Field>
+					</FieldGroup>
+
 					<DialogFooter>
 						<DialogClose asChild>
 							<Button type="button" variant={"ghost"}>
