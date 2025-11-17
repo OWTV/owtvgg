@@ -8,4 +8,5 @@ export * from "./dropdown-menu";
 export * from "./input";
 export * from "./label";
 export * from "./sheet";
+export * from "./sonner";
 export * from "./typography";

@@ -14,10 +14,14 @@ export async function logout(
 		asResponse: true,
 	});
 
-	revalidatePath("/");
+	if (response.ok) {
+		revalidatePath("/");
+		return { success: true };
+	}
 
-	if (response.ok) return { success: true };
-
-	console.error(await response.json());
-	return { error: "An unexpected error occurred. Please try again." };
+	console.error(await response.text());
+	return {
+		success: false,
+		message: "An unexpected error occurred. Please try again.",
+	};
 }

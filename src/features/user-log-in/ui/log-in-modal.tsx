@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { type ComponentProps, useActionState, useEffect } from "react";
+import { toast } from "sonner";
+import { ACTION_STATE } from "@/shared/config";
 import {
 	Button,
 	Dialog,
@@ -20,11 +22,13 @@ import { logIn } from "../model/actions";
 
 export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 	const router = useRouter();
-	const [state, formAction] = useActionState(logIn, {});
+	const [state, formAction] = useActionState(logIn, ACTION_STATE);
 
 	useEffect(() => {
-		if (state.success) router.refresh();
-	}, [state.success, router]);
+		if (!state.success) return;
+		toast.success(state.message ?? "Log in successful.");
+		router.push("/");
+	}, [state, router]);
 
 	return (
 		<Dialog>
@@ -40,9 +44,9 @@ export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 						</DialogDescription>
 					</DialogHeader>
 
-					{state.error && (
+					{state.success && state.message && (
 						<p className="text-sm font-medium text-destructive">
-							{state.error}
+							{state.message}
 						</p>
 					)}
 
