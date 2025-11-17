@@ -3,36 +3,37 @@
 import { constants } from "node:http2";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import type { ActionResult } from "@/shared/model";
+import { z } from "zod";
+import { getServerSession } from "@/entities/session";
+import type { ActionState } from "@/shared/model";
 import { auth } from "@/shared/model";
+import { SignupSchema } from "./schema";
 
 export async function signup(
-	_prevState: ActionResult,
+	_prevState: ActionState<typeof SignupSchema>,
 	formData: FormData,
-): Promise<ActionResult> {
-	const email = formData.get("email");
-	const name = formData.get("name");
-	const password = formData.get("password");
-	const confirmPassword = formData.get("confirm-password");
+): Promise<ActionState<typeof SignupSchema>> {
+	const session = await getServerSession();
 
-	if (!name || typeof name !== "string") {
-		return { error: "Name is required" };
+	if (session) {
+		return {
+			success: false,
+			message: "You are already logged in.",
+		};
 	}
-	if (!email || typeof email !== "string") {
-		return { error: "Email is required" };
+
+	const validationResult = SignupSchema.safeParse(
+		Object.fromEntries(formData.entries()),
+	);
+
+	if (!validationResult.success) {
+		return {
+			success: false,
+			message: z.prettifyError(validationResult.error),
+		};
 	}
-	if (!password || typeof password !== "string") {
-		return { error: "Password is required" };
-	}
-	if (!confirmPassword || typeof confirmPassword !== "string") {
-		return { error: "Please confirm your password" };
-	}
-	if (password !== confirmPassword) {
-		return { error: "Passwords do not match" };
-	}
-	if (password.length < 8) {
-		return { error: "Password must be at least 8 characters long" };
-	}
+
+	const { email, password, name } = validationResult.data;
 
 	const response = await auth.signUpEmail({
 		body: {
@@ -44,15 +45,22 @@ export async function signup(
 		asResponse: true,
 	});
 
-	revalidatePath("/");
-
-	if (response.ok) return { success: true };
-
-	switch (response.status) {
-		case constants.HTTP_STATUS_UNPROCESSABLE_ENTITY:
-			return { error: "A user with this email already exists." };
+	if (response.ok) {
+		revalidatePath("/");
+		return { success: true };
 	}
 
-	console.error(await response.json());
-	return { error: "An unexpected error occurred. Please try again." };
+	console.error(await response.text());
+	switch (response.status) {
+		case constants.HTTP_STATUS_UNPROCESSABLE_ENTITY:
+			return {
+				success: false,
+				message: "A user with this email already exists.",
+			};
+	}
+
+	return {
+		success: false,
+		message: "An unexpected error occurred. Please try again.",
+	};
 }

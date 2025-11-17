@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Navbar } from "@/widgets/navbar";
 import "./globals.css";
 import { getServerSession, SessionProvider } from "@/entities/session";
+import { Toaster } from "@/shared/ui/base";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default async function RootLayout({
 				<SessionProvider session={session}>
 					<Navbar session={session} />
 					{children}
+					<Toaster />
 				</SessionProvider>
 			</body>
 		</html>

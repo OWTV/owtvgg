@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { type ComponentProps, useActionState, useEffect } from "react";
+import { toast } from "sonner";
 import {
 	Button,
 	Dialog,
@@ -12,19 +13,25 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
 	Input,
-	Label,
 } from "@/shared/ui/base";
 import { SubmitButton } from "@/shared/ui/form";
 import { signup } from "../model/actions";
 
 export function SignUpModal({ ...props }: ComponentProps<typeof Button>) {
 	const router = useRouter();
-	const [state, formAction] = useActionState(signup, {});
+	const [state, formAction] = useActionState(signup, { success: null });
+	const errors = state.errors?.properties;
 
 	useEffect(() => {
-		if (state.success) router.refresh();
-	}, [state.success, router]);
+		if (!state.success) return;
+		toast.success(state.message ?? "Account created successfully.");
+		router.push("/");
+	}, [state, router]);
 
 	return (
 		<Dialog>
@@ -40,48 +47,75 @@ export function SignUpModal({ ...props }: ComponentProps<typeof Button>) {
 						</DialogDescription>
 					</DialogHeader>
 
-					{state.error && (
+					{!state.success && state.message && (
 						<p className="text-sm font-medium text-destructive">
-							{state.error}
+							{state.message}
 						</p>
 					)}
-
-					<div className="grid grid-cols-4 gap-4">
-						<Label htmlFor="name">Name</Label>
-						<Input
-							id="name"
-							name="name"
-							type="text"
-							placeholder="John Doe"
-							className="col-span-3"
-							required
-						/>
-						<Label htmlFor="email">Email</Label>
-						<Input
-							id="email"
-							name="email"
-							type="email"
-							placeholder="name@example.com"
-							className="col-span-3"
-							required
-						/>
-						<Label htmlFor="password">Password</Label>
-						<Input
-							id="password"
-							name="password"
-							type="password"
-							className="col-span-3"
-							required
-						/>
-						<Label htmlFor="confirm-password">Confirm</Label>
-						<Input
-							id="confirm-password"
-							name="confirm-password"
-							type="password"
-							className="col-span-3"
-							required
-						/>
-					</div>
+					<FieldGroup>
+						<Field>
+							<FieldLabel htmlFor="name">Name</FieldLabel>
+							<Input
+								id="name"
+								name="name"
+								type="text"
+								placeholder="John Doe"
+								className="col-span-3"
+								required
+							/>
+							<FieldError
+								errors={errors?.name?.errors?.map((msg) => ({
+									message: msg,
+								}))}
+							/>
+						</Field>
+						<Field>
+							<FieldLabel htmlFor="email">Email</FieldLabel>
+							<Input
+								id="email"
+								name="email"
+								type="email"
+								placeholder="name@example.com"
+								className="col-span-3"
+								required
+							/>
+							<FieldError
+								errors={errors?.email?.errors?.map((msg) => ({
+									message: msg,
+								}))}
+							/>
+						</Field>
+						<Field>
+							<FieldLabel htmlFor="password">Password</FieldLabel>
+							<Input
+								id="password"
+								name="password"
+								type="password"
+								className="col-span-3"
+								required
+							/>
+							<FieldError
+								errors={errors?.password?.errors?.map((msg) => ({
+									message: msg,
+								}))}
+							/>
+						</Field>
+						<Field>
+							<FieldLabel htmlFor="confirm-password">Confirm</FieldLabel>
+							<Input
+								id="confirm-password"
+								name="confirm-password"
+								type="password"
+								className="col-span-3"
+								required
+							/>
+							<FieldError
+								errors={errors?.confirmPassword?.errors?.map((msg) => ({
+									message: msg,
+								}))}
+							/>
+						</Field>
+					</FieldGroup>
 					<DialogFooter>
 						<DialogClose asChild>
 							<Button type="button" variant={"ghost"}>
