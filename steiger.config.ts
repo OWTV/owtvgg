@@ -18,7 +18,7 @@ export default defineConfig([
 		},
 	},
 	{
-		// Temporarily disabled while we have few slices
+		// TEMP: Temporarily disabled while we have few slices
 		files: ["./src/features/**"],
 		rules: {
 			"fsd/repetitive-naming": "off",
