@@ -1,5 +1,3 @@
-import { isPlayer } from "@/entities/player";
-
 import { ToggleFavouriteButton } from "@/features/user-toggle-favourite-player";
 import type { Player, Team } from "@/shared/model";
 import { Card, CardContent, Typography } from "@/shared/ui/base";
@@ -31,7 +29,7 @@ interface PlayerGridProps {
 }
 
 function PlayerListGrid({ players, favouritePlayerIds }: PlayerGridProps) {
-	const filteredPlayers = players?.filter(isPlayer);
+	const filteredPlayers = players?.filter((p) => typeof p !== "number");
 
 	return (
 		<div className="grid grid-cols-4 gap-4">
