@@ -7,11 +7,19 @@ A web application for tracking OWCS players and teams, built with Next.js and Pa
 ### 1. Prerequisites
 
 - [Bun](https://bun.sh/)
+- [Docker](https://www.docker.com/)
 
 ### 2. Database
 
-[instructions to setup a db on linux]
-[instructions to provision a free db on Neon]
+**Option A: Local Docker**  
+Run the following command to spin up a local Postgres instance with Docker
+
+```bash
+docker run --name owtv-postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=owtv -p 5432:5432 -d postgres
+```
+
+**Option A: Hosted**  
+Alternatively, you can provision a free database on cloud providers (e.g. [Neon](https://neon.com/)).
 
 ### 3. Installation
 
@@ -19,18 +27,14 @@ A web application for tracking OWCS players and teams, built with Next.js and Pa
 # Clone the repository
 git clone https://github.com/your-username/owtvgg.git
 cd owtvgg
-```
 
-```bash
 # Install dependencies:
 bun install
-```
 
-```bash
 # Make a copy of the environment file and set the relevant values
-# Generate and set secrets for Payload CMS & Better Auth
-# Set the database connection string for your PostgreSQL database
 cp .env.example .env
+
+# Generate and set secrets for Payload CMS & Better Auth
 ```
 
 ### 4. Development
@@ -50,20 +54,3 @@ bun dev
 - **Git Hooks:** [Lefthook](https://github.com/evilmartians/lefthook)
 - **Package Manager:** [Bun](https://bun.sh/)
 - **Architecture:** [Feature-Sliced Design](https://feature-sliced.design/), [Steiger](https://github.com/feature-sliced/steiger)
-
-## 📦 CI/CD Pipeline
-
-This project uses a modern CI/CD workflow powered by GitHub Actions and Vercel.
-
-
-### Pull Requests
-
-Pull Request trigger a series of code quality checks: code formatting, code linting, type check, architecture linting, and unit tests.
-
-### Deployment
-
-Any pushes to the `main` branch are automatically deployed to production.
-
-Any pushes to non-`main` branches trigger a deployment to a preview environment. Vercel will comment a link to the environment on the PR. Vercel will provision a new database branch for each of these preview environments.
-
-Database changes are handled by migration scripts in `db/migrations`. Any new generated migration scripts will be applied on deployment to vercel.

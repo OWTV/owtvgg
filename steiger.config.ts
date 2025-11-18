@@ -18,17 +18,10 @@ export default defineConfig([
 		},
 	},
 	{
-		// Temporarily disabled while we have few slices
+		// TEMP: Temporarily disabled while we have few slices
 		files: ["./src/features/**"],
 		rules: {
 			"fsd/repetitive-naming": "off",
-		},
-	},
-	{
-		// Temporarily disabled while we have slices that only contain collection
-		files: ["./src/entities/**"],
-		rules: {
-			"fsd/insignificant-slice": "off",
 		},
 	},
 ]);
