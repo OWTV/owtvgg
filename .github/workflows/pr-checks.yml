@@ -30,3 +30,6 @@ jobs:
 
       - name: ✨ Check Linting and Formatting
         run: bun run check:ci
+
+      - name: 🧪 Run Unit Tests
+        run: bun run test:ci
