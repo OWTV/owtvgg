@@ -1,6 +1,5 @@
 import { ToggleFavouriteButton } from "@/features/user-toggle-favourite-player";
-import type { Player, Team } from "@/shared/model";
-import type { User } from "@/shared/model/payload/types";
+import type { Player, Team, User } from "@/shared/model";
 import { Card, CardContent, Typography } from "@/shared/ui/base";
 
 interface TeamListProps {
