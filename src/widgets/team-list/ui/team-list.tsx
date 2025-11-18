@@ -1,13 +1,15 @@
 import { ToggleFavouriteButton } from "@/features/user-toggle-favourite-player";
-import type { Player, Team } from "@/shared/model";
+import type { Player, Team, User } from "@/shared/model";
 import { Card, CardContent, Typography } from "@/shared/ui/base";
 
 interface TeamListProps {
 	teams: Team[];
-	favouritePlayerIds: number[];
+	user: User;
 }
 
-export function TeamList({ teams, favouritePlayerIds }: TeamListProps) {
+export function TeamList({ teams, user }: TeamListProps) {
+	const favouritePlayerIds = user.favouritePlayers?.map(asPlayerId) ?? [];
+
 	if (!teams.length) {
 		return <p className="text-muted-foreground">No teams available.</p>;
 	}
@@ -59,4 +61,8 @@ function PlayerCard({
 			</CardContent>
 		</Card>
 	);
+}
+
+function asPlayerId(fav: number | Player) {
+	return typeof fav === "number" ? fav : fav.id;
 }

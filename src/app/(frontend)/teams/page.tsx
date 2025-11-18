@@ -1,40 +1,23 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "@/entities/session";
-import type { Player } from "@/shared/model";
-import { payload } from "@/shared/model";
+import { getAllTeams } from "@/entities/team";
+import { getUserById } from "@/entities/user";
 import { Typography } from "@/shared/ui/base";
 import { TeamList } from "@/widgets/team-list";
 
 export default async function TeamsPage() {
 	const session = await getServerSession();
-	if (!session?.user) {
-		redirect("/");
-	}
+	if (!session?.user) redirect("/");
 
-	const [teamResult, userResult] = await Promise.all([
-		payload.find({
-			collection: "teams",
-			depth: 1,
-			sort: "name",
-		}),
-		payload.findByID({
-			collection: "users",
-			id: session.user.id,
-			depth: 0,
-		}),
+	const [teamsResult, userResult] = await Promise.all([
+		getAllTeams({ depth: 1 }),
+		getUserById(session.user.id),
 	]);
 
-	const teams = teamResult.docs;
-
-	const favouritePlayerIds =
-		userResult.favouritePlayers?.map((fav: number | Player) =>
-			typeof fav === "number" ? fav : fav.id,
-		) ?? [];
-
 	return (
-		<main className="container pt-16">
+		<>
 			<Typography as={"h1"}>Teams</Typography>
-			<TeamList teams={teams} favouritePlayerIds={favouritePlayerIds} />
-		</main>
+			<TeamList teams={teamsResult} user={userResult} />
+		</>
 	);
 }

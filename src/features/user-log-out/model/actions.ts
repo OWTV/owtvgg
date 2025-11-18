@@ -14,10 +14,8 @@ export async function logout(
 		asResponse: true,
 	});
 
-	if (response.ok) {
-		revalidatePath("/");
-		return { success: true };
-	}
+	revalidatePath("/", "layout");
+	if (response.ok) return { success: true };
 
 	console.error(await response.text());
 	return {

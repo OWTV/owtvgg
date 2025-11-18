@@ -50,7 +50,6 @@ export async function signup(
 		return { success: true };
 	}
 
-	console.error(await response.text());
 	switch (response.status) {
 		case constants.HTTP_STATUS_UNPROCESSABLE_ENTITY:
 			return {
@@ -59,6 +58,8 @@ export async function signup(
 			};
 	}
 
+	console.error(await response.text());
+	revalidatePath("/");
 	return {
 		success: false,
 		message: "An unexpected error occurred. Please try again.",

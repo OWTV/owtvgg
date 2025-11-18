@@ -40,8 +40,6 @@ export async function logIn(
 		return { success: true };
 	}
 
-	console.error(await response.text());
-
 	switch (response.status) {
 		case constants.HTTP_STATUS_UNAUTHORIZED:
 			return {
@@ -50,6 +48,8 @@ export async function logIn(
 			};
 	}
 
+	console.error(await response.text());
+	revalidatePath("/");
 	return {
 		success: false,
 		message: "An unexpected error occurred. Please try again.",

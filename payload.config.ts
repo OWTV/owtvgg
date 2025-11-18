@@ -4,8 +4,8 @@ import { nextCookies } from "better-auth/next-js";
 import { buildConfig } from "payload";
 import { betterAuthPlugin } from "payload-auth/better-auth";
 import sharp from "sharp";
-import { Players } from "@/entities/player";
-import { Teams } from "@/entities/team";
+import { Players } from "@/entities/player/model/collection";
+import { Teams } from "@/entities/team/model/collection";
 
 const connectionString = process.env.STORAGE_POSTGRES_URL ?? "";
 const secret = process.env.PAYLOAD_SECRET ?? "";

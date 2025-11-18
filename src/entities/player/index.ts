@@ -1,1 +1,2 @@
-export { Players } from "./model/player-collection";
+export { Players } from "./model/collection";
+export * from "./model/repository";

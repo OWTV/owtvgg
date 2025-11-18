@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OWTV.gg
 
-## Getting Started
+A web application for tracking OWCS players and teams, built with Next.js and Payload CMS.
 
-First, run the development server:
+## 🚀 Getting Started
+
+### 1. Prerequisites
+
+- [Bun](https://bun.sh/)
+
+### 2. Database
+
+[instructions to setup a db on linux]
+[instructions to provision a free db on Neon]
+
+### 3. Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+# Clone the repository
+git clone https://github.com/your-username/owtvgg.git
+cd owtvgg
+```
+
+```bash
+# Install dependencies:
+bun install
+```
+
+```bash
+# Make a copy of the environment file and set the relevant values
+# Generate and set secrets for Payload CMS & Better Auth
+# Set the database connection string for your PostgreSQL database
+cp .env.example .env
+```
+
+### 4. Development
+
+```bash
+# Start the app for local development
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** [Next.js](https://nextjs.org/)
+- **CMS:** [Payload CMS](https://payloadcms.com/)
+- **Authentication:** [Better Auth](https://www.better-auth.com/), [Payload Auth](https://github.com/payload-auth/payload-auth)
+- **UI:** [shadcn/ui](https://ui.shadcn.com/), [Tailwind CSS](https://tailwindcss.com/)
+- **Code Quality:** [Biome](https://biomejs.dev/)
+- **Git Hooks:** [Lefthook](https://github.com/evilmartians/lefthook)
+- **Package Manager:** [Bun](https://bun.sh/)
+- **Architecture:** [Feature-Sliced Design](https://feature-sliced.design/), [Steiger](https://github.com/feature-sliced/steiger)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 CI/CD Pipeline
 
-## Learn More
+This project uses a modern CI/CD workflow powered by GitHub Actions and Vercel.
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Pull Requests
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Pull Request trigger a series of code quality checks: code formatting, code linting, type check, architecture linting, and unit tests.
 
-## Deploy on Vercel
+### Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Any pushes to the `main` branch are automatically deployed to production.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Any pushes to non-`main` branches trigger a deployment to a preview environment. Vercel will comment a link to the environment on the PR. Vercel will provision a new database branch for each of these preview environments.
+
+Database changes are handled by migration scripts in `db/migrations`. Any new generated migration scripts will be applied on deployment to vercel.
