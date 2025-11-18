@@ -30,7 +30,7 @@ export function LogInModal({ ...props }: ComponentProps<typeof Button>) {
 	useEffect(() => {
 		if (!state.success) return;
 		toast.success(state.message ?? "Log in successful.");
-		router.push("/");
+		router.refresh();
 	}, [state, router]);
 
 	return (

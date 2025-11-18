@@ -30,7 +30,7 @@ export function SignUpModal({ ...props }: ComponentProps<typeof Button>) {
 	useEffect(() => {
 		if (!state.success) return;
 		toast.success(state.message ?? "Account created successfully.");
-		router.push("/");
+		router.refresh();
 	}, [state, router]);
 
 	return (

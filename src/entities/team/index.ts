@@ -1,1 +1,2 @@
-export { Teams } from "./model/team-collection";
+export { Teams } from "./model/collection";
+export * from "./model/repository";
