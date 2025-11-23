@@ -1,13 +1,29 @@
 {
 	"name": "@owtvgg/faceit",
-	"module": "index.ts",
-	"main": "index.ts",
-	"types": "index.ts",
+	"version": "1.0.0",
+	"description": "This directory collects various site tools that interact with Faceit. For now, that means the [scraper](./scraper), which downloads tournament data and writes it into the database.",
+	"module": "src/index.ts",
+	"main": "src/index.ts",
+	"types": "src/index.ts",
 	"type": "module",
-	"devDependencies": {
-		"@types/bun": "latest"
+	"scripts": {
+		"swagger": "ts-node scripts/swagger.ts",
+		"explore": "ts-node scripts/explore.ts",
+		"test": "jest"
 	},
-	"peerDependencies": {
-		"typescript": "^5"
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
+		"@types/jest": "^30.0.0",
+		"@types/node": "^24.3.0",
+		"cmd-ts": "^0.14.1",
+		"dotenv": "^17.2.1",
+		"jest": "^30.1.1",
+		"prettier": "^3.6.2",
+		"ts-jest": "^29.4.1",
+		"ts-node": "^10.9.2",
+		"tsconfig-paths": "^4.2.0",
+		"typescript": "^5.9.2"
 	}
 }
