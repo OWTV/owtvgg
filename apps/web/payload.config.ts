@@ -28,6 +28,7 @@ export default buildConfig({
 	],
 	secret,
 	debug: true,
+	serverURL: "http://localhost:3000",
 	db: postgresAdapter({
 		push: false,
 		pool: { connectionString },
