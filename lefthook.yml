@@ -1,5 +1,14 @@
 pre-commit:
+  parallel: true
   commands:
-    check:
-      run: bunx @biomejs/biome check --write --colors=off --no-errors-on-unmatched  {staged_files}
+    root-biome:
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      exclude: "apps/web/*"
+      run: bun biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+
+    web-biome:
+      root: "apps/web"
+      glob: "**/*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      run: bun biome check --write --no-errors-on-unmatched {staged_files}
       stage_fixed: true

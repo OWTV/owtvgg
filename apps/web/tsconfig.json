@@ -1,0 +1,23 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"paths": {
+			"@/*": ["./src/*"],
+			"@payload-config": ["./payload.config.ts"]
+		}
+	},
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		".next/dev/types/**/*.ts",
+		"**/*.mts"
+	],
+	"exclude": ["node_modules"]
+}

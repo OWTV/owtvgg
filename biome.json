@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.3.5/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.3.7/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -10,17 +10,10 @@
 		"includes": [
 			"**",
 			"!node_modules",
-			"!.next",
 			"!dist",
 			"!build",
-			"!db/migrations",
-			"!src/shared/model/payload/types.d.ts"
+			"!.next"
 		]
-	},
-	"css": {
-		"parser": {
-			"tailwindDirectives": true
-		}
 	},
 	"formatter": {
 		"enabled": true
@@ -29,10 +22,6 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true
-		},
-		"domains": {
-			"next": "recommended",
-			"react": "recommended"
 		}
 	},
 	"assist": {

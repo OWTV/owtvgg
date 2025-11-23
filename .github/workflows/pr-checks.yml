@@ -23,13 +23,13 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: 🦺 Check Type Safety
-        run: bun run check:tsc
+        run: bun run ci:check:tsc
 
       - name: 📐 Check FSD Architecture
-        run: bun run check:fsd
+        run: bun run ci:check:fsd
 
       - name: ✨ Check Linting and Formatting
-        run: bun run check:ci
+        run: bun run ci:check:lint
 
       - name: 🧪 Run Unit Tests
-        run: bun run test:ci
+        run: bun run ci:test

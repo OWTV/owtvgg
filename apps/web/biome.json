@@ -1,0 +1,25 @@
+{
+	"extends": ["../../biome.json"],
+	"files": {
+		"includes": [
+			"**",
+			"!node_modules",
+			"!.next",
+			"!dist",
+			"!build",
+			"!db/migrations",
+			"!src/shared/model/payload/types.d.ts"
+		]
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"linter": {
+		"domains": {
+			"next": "recommended",
+			"react": "recommended"
+		}
+	}
+}
