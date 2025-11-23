@@ -1,14 +1,17 @@
 {
-	"name": "owtvgg",
-	"version": "0.1.0",
-	"type": "module",
-	"private": true,
-	"scripts": {
-		"web:build": "bun run --filter @owtvgg/web build",
-		"web:dev": "bun run --filter @owtvgg/web dev",
-		"web:check:ci": "bun run --filter @owtvgg/web check:ci",
-		"web:test:ci": "bun run --filter @owtvgg/web test:ci"
-	},
-	"workspaces": ["apps/*", "packages/*"]
+  "name": "owtvgg",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "web:dev": "bun run --filter '@owtvgg/web' dev",
+    "web:build": "bun run --filter '@owtvgg/web' build",
+    "web:test": "bun run --filter '@owtvgg/web' test",
+    "web:start": "bun run --filter '@owtvgg/web' start",
+    "web:db": "bun run --filter '@owtvgg/web' payload",
+    "ci:test": "bun run --filter '*' test:ci",
+    "ci:check:lint": "bun run --filter '*' check:lint",
+    "ci:check:fsd": "bun run --filter '*' check:fsd",
+    "ci:check:tsc": "bun run --filter '*' check:tsc",
+    "postinstall": "lefthook install"
+  }
 }
-	
