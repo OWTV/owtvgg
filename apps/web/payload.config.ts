@@ -40,6 +40,11 @@ export default buildConfig({
 		pool: { connectionString },
 		migrationDir: "db/migrations",
 	}),
+	admin: {
+		importMap: {
+			baseDir: "../..",
+		},
+	},
 	sharp,
 	plugins: [
 		betterAuthPlugin({
