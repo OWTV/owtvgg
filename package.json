@@ -1,0 +1,11 @@
+{
+	"name": "owtvgg",
+	"version": "0.1.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"build": "bun run --filter @owtvgg/web build"
+	},
+	"workspaces": ["apps/*", "packages/*"]
+}
+  
