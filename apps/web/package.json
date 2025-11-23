@@ -11,7 +11,7 @@
 		"check:lint": "biome ci .",
 		"check:fsd": "steiger ./src",
 		"check:tsc": "tsc --noEmit --skipLibCheck",
-		"payload:seed": "bun run src/db/seed.ts",
+		"payload:seed": "bun run db/seed.ts",
 		"test": "vitest",
 		"test:ci": "vitest run"
 	},
