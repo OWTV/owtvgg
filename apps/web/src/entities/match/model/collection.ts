@@ -105,5 +105,31 @@ export const Matches: CollectionConfig = {
 				readOnly: true,
 			},
 		},
+		{
+			name: "mapsPlayed",
+			type: "array",
+			fields: [
+				{
+					type: "row",
+					fields: [
+						{
+							name: "map",
+							type: "relationship",
+							relationTo: "game-maps",
+							required: true,
+						},
+						{
+							name: "winner",
+							type: "relationship",
+							relationTo: "teams",
+						},
+						{
+							name: "score",
+							type: "text",
+						},
+					],
+				},
+			],
+		},
 	],
 };

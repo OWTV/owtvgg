@@ -73,12 +73,14 @@ export interface Config {
     verifications: Verification;
     'admin-invitations': AdminInvitation;
     'draft-rosters': DraftRoster;
+    'game-maps': GameMap;
     matches: Match;
     'published-rosters': PublishedRoster;
     'tournament-rounds': TournamentRound;
     tournaments: Tournament;
     'tournament-players': TournamentPlayer;
     players: Player;
+    'player-match-stats': PlayerMatchStat;
     teams: Team;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -93,12 +95,14 @@ export interface Config {
     verifications: VerificationsSelect<false> | VerificationsSelect<true>;
     'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>;
     'draft-rosters': DraftRostersSelect<false> | DraftRostersSelect<true>;
+    'game-maps': GameMapsSelect<false> | GameMapsSelect<true>;
     matches: MatchesSelect<false> | MatchesSelect<true>;
     'published-rosters': PublishedRostersSelect<false> | PublishedRostersSelect<true>;
     'tournament-rounds': TournamentRoundsSelect<false> | TournamentRoundsSelect<true>;
     tournaments: TournamentsSelect<false> | TournamentsSelect<true>;
     'tournament-players': TournamentPlayersSelect<false> | TournamentPlayersSelect<true>;
     players: PlayersSelect<false> | PlayersSelect<true>;
+    'player-match-stats': PlayerMatchStatsSelect<false> | PlayerMatchStatsSelect<true>;
     teams: TeamsSelect<false> | TeamsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -420,6 +424,18 @@ export interface TournamentRound {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "game-maps".
+ */
+export interface GameMap {
+  id: number;
+  name: string;
+  type: 'control' | 'escort' | 'hybrid' | 'push' | 'flashpoint' | 'clash';
+  image?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "matches".
  */
 export interface Match {
@@ -443,6 +459,14 @@ export interface Match {
    */
   winner?: (number | null) | Team;
   externalId?: string | null;
+  mapsPlayed?:
+    | {
+        map: number | GameMap;
+        winner?: (number | null) | Team;
+        score?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -473,6 +497,37 @@ export interface PublishedRoster {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "player-match-stats".
+ */
+export interface PlayerMatchStat {
+  id: number;
+  tournament: number | Tournament;
+  round: number | TournamentRound;
+  match: number | Match;
+  map: number | GameMap;
+  /**
+   * 1, 2, 3, etc.
+   */
+  mapNumber: number;
+  player: number | TournamentPlayer;
+  /**
+   * The team the player was on for THIS specific map.
+   */
+  team: number | Team;
+  fantasyPoints: number;
+  stats?: {
+    kills?: number | null;
+    deaths?: number | null;
+    assists?: number | null;
+    damage?: number | null;
+    healing?: number | null;
+    mitigated?: number | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -525,6 +580,10 @@ export interface PayloadLockedDocument {
         value: number | DraftRoster;
       } | null)
     | ({
+        relationTo: 'game-maps';
+        value: number | GameMap;
+      } | null)
+    | ({
         relationTo: 'matches';
         value: number | Match;
       } | null)
@@ -547,6 +606,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'players';
         value: number | Player;
+      } | null)
+    | ({
+        relationTo: 'player-match-stats';
+        value: number | PlayerMatchStat;
       } | null)
     | ({
         relationTo: 'teams';
@@ -683,6 +746,17 @@ export interface DraftRostersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "game-maps_select".
+ */
+export interface GameMapsSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "matches_select".
  */
 export interface MatchesSelect<T extends boolean = true> {
@@ -696,6 +770,14 @@ export interface MatchesSelect<T extends boolean = true> {
   awayScore?: T;
   winner?: T;
   externalId?: T;
+  mapsPlayed?:
+    | T
+    | {
+        map?: T;
+        winner?: T;
+        score?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -780,6 +862,32 @@ export interface PlayersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
   isArchived?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "player-match-stats_select".
+ */
+export interface PlayerMatchStatsSelect<T extends boolean = true> {
+  tournament?: T;
+  round?: T;
+  match?: T;
+  map?: T;
+  mapNumber?: T;
+  player?: T;
+  team?: T;
+  fantasyPoints?: T;
+  stats?:
+    | T
+    | {
+        kills?: T;
+        deaths?: T;
+        assists?: T;
+        damage?: T;
+        healing?: T;
+        mitigated?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
