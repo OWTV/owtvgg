@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getServerSession } from "../../../entities/session";
 import { getUserById, setUserFavouritePlayers } from "../../../entities/user";
+import { getServerSession } from "../../../entities/user-session";
 
 export async function toggleFavouritePlayer(playerId: number) {
 	const session = await getServerSession();

@@ -7,10 +7,10 @@ import sharp from "sharp";
 import { Players } from "@/entities/player/model/collection";
 import { DraftRosters } from "@/entities/roster-draft/model/collection";
 import { PublishedRosters } from "@/entities/roster-published/model/collection";
-import { Rounds } from "@/entities/round/model/collection";
 import { Teams } from "@/entities/team/model/collection";
 import { Tournaments } from "@/entities/tournament/model/collection";
 import { TournamentPlayers } from "@/entities/tournament-player/model/collection";
+import { TournamentRounds } from "@/entities/tournament-round/model/collection";
 
 const connectionString = process.env.STORAGE_POSTGRES_URL ?? "";
 const secret = process.env.PAYLOAD_SECRET ?? "";
@@ -20,7 +20,7 @@ export default buildConfig({
 	collections: [
 		DraftRosters,
 		PublishedRosters,
-		Rounds,
+		TournamentRounds,
 		Tournaments,
 		TournamentPlayers,
 		Players,

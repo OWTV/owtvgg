@@ -29,7 +29,7 @@ export const PublishedRosters: CollectionConfig = {
 		{
 			name: "round",
 			type: "relationship",
-			relationTo: "rounds",
+			relationTo: "tournament-rounds",
 			required: true,
 			hasMany: false,
 		},

@@ -74,7 +74,7 @@ export interface Config {
     'admin-invitations': AdminInvitation;
     'draft-rosters': DraftRoster;
     'published-rosters': PublishedRoster;
-    rounds: Round;
+    'tournament-rounds': TournamentRound;
     tournaments: Tournament;
     'tournament-players': TournamentPlayer;
     players: Player;
@@ -93,7 +93,7 @@ export interface Config {
     'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>;
     'draft-rosters': DraftRostersSelect<false> | DraftRostersSelect<true>;
     'published-rosters': PublishedRostersSelect<false> | PublishedRostersSelect<true>;
-    rounds: RoundsSelect<false> | RoundsSelect<true>;
+    'tournament-rounds': TournamentRoundsSelect<false> | TournamentRoundsSelect<true>;
     tournaments: TournamentsSelect<false> | TournamentsSelect<true>;
     'tournament-players': TournamentPlayersSelect<false> | TournamentPlayersSelect<true>;
     players: PlayersSelect<false> | PlayersSelect<true>;
@@ -374,7 +374,7 @@ export interface TournamentPlayer {
   currentPrice: number;
   priceHistory?:
     | {
-        round: number | Round;
+        round: number | TournamentRound;
         price: number;
         id?: string | null;
       }[]
@@ -395,9 +395,9 @@ export interface Team {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rounds".
+ * via the `definition` "tournament-rounds".
  */
-export interface Round {
+export interface TournamentRound {
   id: number;
   name: string;
   tournament: number | Tournament;
@@ -423,7 +423,7 @@ export interface Round {
 export interface PublishedRoster {
   id: number;
   user: number | User;
-  round: number | Round;
+  round: number | TournamentRound;
   /**
    * The final calculated score for this round.
    */
@@ -499,8 +499,8 @@ export interface PayloadLockedDocument {
         value: number | PublishedRoster;
       } | null)
     | ({
-        relationTo: 'rounds';
-        value: number | Round;
+        relationTo: 'tournament-rounds';
+        value: number | TournamentRound;
       } | null)
     | ({
         relationTo: 'tournaments';
@@ -669,9 +669,9 @@ export interface PublishedRostersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rounds_select".
+ * via the `definition` "tournament-rounds_select".
  */
-export interface RoundsSelect<T extends boolean = true> {
+export interface TournamentRoundsSelect<T extends boolean = true> {
   name?: T;
   tournament?: T;
   startDate?: T;

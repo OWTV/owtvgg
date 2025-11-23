@@ -1,7 +1,7 @@
 import type { CollectionConfig } from "payload";
 
-export const Rounds: CollectionConfig = {
-	slug: "rounds",
+export const TournamentRounds: CollectionConfig = {
+	slug: "tournament-rounds",
 	admin: {
 		useAsTitle: "name",
 		defaultColumns: ["name", "tournament", "lockDate", "endDate"],

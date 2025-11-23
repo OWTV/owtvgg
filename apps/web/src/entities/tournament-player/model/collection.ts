@@ -69,7 +69,7 @@ export const TournamentPlayers: CollectionConfig = {
 				{
 					name: "round",
 					type: "relationship",
-					relationTo: "rounds",
+					relationTo: "tournament-rounds",
 					required: true,
 				},
 				{
