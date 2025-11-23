@@ -72,6 +72,8 @@ export interface Config {
     accounts: Account;
     verifications: Verification;
     'admin-invitations': AdminInvitation;
+    rounds: Round;
+    tournaments: Tournament;
     players: Player;
     teams: Team;
     'payload-kv': PayloadKv;
@@ -86,6 +88,8 @@ export interface Config {
     accounts: AccountsSelect<false> | AccountsSelect<true>;
     verifications: VerificationsSelect<false> | VerificationsSelect<true>;
     'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>;
+    rounds: RoundsSelect<false> | RoundsSelect<true>;
+    tournaments: TournamentsSelect<false> | TournamentsSelect<true>;
     players: PlayersSelect<false> | PlayersSelect<true>;
     teams: TeamsSelect<false> | TeamsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -285,6 +289,54 @@ export interface AdminInvitation {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rounds".
+ */
+export interface Round {
+  id: number;
+  name: string;
+  tournament: number | Tournament;
+  /**
+   * When this round opens for drafting/changes.
+   */
+  startDate: string;
+  /**
+   * STRICT DEADLINE. Rosters are snapshot at this exact time.
+   */
+  lockDate: string;
+  /**
+   * When the last match of this round concludes.
+   */
+  endDate: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tournaments".
+ */
+export interface Tournament {
+  id: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+  /**
+   * Total credits available for drafting
+   */
+  budget: number;
+  /**
+   * Free transfers allowed per round
+   */
+  transferLimit: number;
+  rosterStructure: {
+    role: 'tank' | 'damage' | 'support';
+    count: number;
+    id?: string | null;
+  }[];
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "teams".
  */
 export interface Team {
@@ -337,6 +389,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'admin-invitations';
         value: number | AdminInvitation;
+      } | null)
+    | ({
+        relationTo: 'rounds';
+        value: number | Round;
+      } | null)
+    | ({
+        relationTo: 'tournaments';
+        value: number | Tournament;
       } | null)
     | ({
         relationTo: 'players';
@@ -452,6 +512,39 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
   role?: T;
   token?: T;
   url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rounds_select".
+ */
+export interface RoundsSelect<T extends boolean = true> {
+  name?: T;
+  tournament?: T;
+  startDate?: T;
+  lockDate?: T;
+  endDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tournaments_select".
+ */
+export interface TournamentsSelect<T extends boolean = true> {
+  name?: T;
+  startDate?: T;
+  endDate?: T;
+  budget?: T;
+  transferLimit?: T;
+  rosterStructure?:
+    | T
+    | {
+        role?: T;
+        count?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
