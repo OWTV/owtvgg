@@ -72,6 +72,8 @@ export interface Config {
     accounts: Account;
     verifications: Verification;
     'admin-invitations': AdminInvitation;
+    'draft-rosters': DraftRoster;
+    'published-rosters': PublishedRoster;
     rounds: Round;
     tournaments: Tournament;
     players: Player;
@@ -88,6 +90,8 @@ export interface Config {
     accounts: AccountsSelect<false> | AccountsSelect<true>;
     verifications: VerificationsSelect<false> | VerificationsSelect<true>;
     'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>;
+    'draft-rosters': DraftRostersSelect<false> | DraftRostersSelect<true>;
+    'published-rosters': PublishedRostersSelect<false> | PublishedRostersSelect<true>;
     rounds: RoundsSelect<false> | RoundsSelect<true>;
     tournaments: TournamentsSelect<false> | TournamentsSelect<true>;
     players: PlayersSelect<false> | PlayersSelect<true>;
@@ -167,6 +171,10 @@ export interface Player {
   id: number;
   name: string;
   role: 'tank' | 'support' | 'damage' | 'flex';
+  /**
+   * Hide this player from new drafts without deleting history.
+   */
+  isArchived?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -289,24 +297,31 @@ export interface AdminInvitation {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rounds".
+ * via the `definition` "draft-rosters".
  */
-export interface Round {
+export interface DraftRoster {
   id: number;
-  name: string;
+  user: number | User;
   tournament: number | Tournament;
   /**
-   * When this round opens for drafting/changes.
+   * Calculated sum of player costs
    */
-  startDate: string;
+  totalCost?: number | null;
   /**
-   * STRICT DEADLINE. Rosters are snapshot at this exact time.
+   * True if the roster meets all tournament criteria (budget, role counts)
    */
-  lockDate: string;
-  /**
-   * When the last match of this round concludes.
-   */
-  endDate: string;
+  isValid?: boolean | null;
+  players?:
+    | {
+        player: number | Player;
+        /**
+         * The role slot this player is fulfilling (e.g., 'tank', 'flex')
+         */
+        assignedRole: string;
+        isCaptain?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -332,6 +347,59 @@ export interface Tournament {
     count: number;
     id?: string | null;
   }[];
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "published-rosters".
+ */
+export interface PublishedRoster {
+  id: number;
+  user: number | User;
+  round: number | Round;
+  /**
+   * The final calculated score for this round.
+   */
+  totalScore?: number | null;
+  /**
+   * Cached global rank for this round.
+   */
+  rank?: number | null;
+  rosterSnapshot?:
+    | {
+        player: number | Player;
+        /**
+         * Points earned by this specific player in this round
+         */
+        score?: number | null;
+        isCaptain?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rounds".
+ */
+export interface Round {
+  id: number;
+  name: string;
+  tournament: number | Tournament;
+  /**
+   * When this round opens for drafting/changes.
+   */
+  startDate: string;
+  /**
+   * STRICT DEADLINE. Rosters are snapshot at this exact time.
+   */
+  lockDate: string;
+  /**
+   * When the last match of this round concludes.
+   */
+  endDate: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -389,6 +457,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'admin-invitations';
         value: number | AdminInvitation;
+      } | null)
+    | ({
+        relationTo: 'draft-rosters';
+        value: number | DraftRoster;
+      } | null)
+    | ({
+        relationTo: 'published-rosters';
+        value: number | PublishedRoster;
       } | null)
     | ({
         relationTo: 'rounds';
@@ -517,6 +593,46 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "draft-rosters_select".
+ */
+export interface DraftRostersSelect<T extends boolean = true> {
+  user?: T;
+  tournament?: T;
+  totalCost?: T;
+  isValid?: T;
+  players?:
+    | T
+    | {
+        player?: T;
+        assignedRole?: T;
+        isCaptain?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "published-rosters_select".
+ */
+export interface PublishedRostersSelect<T extends boolean = true> {
+  user?: T;
+  round?: T;
+  totalScore?: T;
+  rank?: T;
+  rosterSnapshot?:
+    | T
+    | {
+        player?: T;
+        score?: T;
+        isCaptain?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "rounds_select".
  */
 export interface RoundsSelect<T extends boolean = true> {
@@ -555,6 +671,7 @@ export interface TournamentsSelect<T extends boolean = true> {
 export interface PlayersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
+  isArchived?: T;
   updatedAt?: T;
   createdAt?: T;
 }

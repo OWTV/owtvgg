@@ -4,6 +4,8 @@ import { nextCookies } from "better-auth/next-js";
 import { buildConfig } from "payload";
 import { betterAuthPlugin } from "payload-auth/better-auth";
 import sharp from "sharp";
+import { DraftRosters } from "@/entities/roster-draft/model/collection";
+import { PublishedRosters } from "@/entities/roster-published/model/collection";
 import { Rounds } from "@/entities/round/model/collection";
 import { Tournaments } from "@/entities/tournament/model/collection";
 import { Players } from "./src/entities/player/model/collection";
@@ -14,7 +16,14 @@ const secret = process.env.PAYLOAD_SECRET ?? "";
 
 export default buildConfig({
 	editor: lexicalEditor(),
-	collections: [Rounds, Tournaments, Players, Teams],
+	collections: [
+		DraftRosters,
+		PublishedRosters,
+		Rounds,
+		Tournaments,
+		Players,
+		Teams,
+	],
 	secret,
 	debug: true,
 	db: postgresAdapter({
