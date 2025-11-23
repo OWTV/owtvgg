@@ -1,6 +1,6 @@
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Link from "next/link";
-import type { Session } from "../../../entities/session";
+import type { Session } from "../../../entities/user-session";
 import { LogInButton } from "../../../features/user-log-in";
 import { LogOutButton } from "../../../features/user-log-out";
 import { SignUpModal } from "../../../features/user-sign-up";

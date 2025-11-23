@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import { getServerSession } from "../../../entities/session";
 import { getAllTeams } from "../../../entities/team";
 import { getUserById } from "../../../entities/user";
+import { getServerSession } from "../../../entities/user-session";
 import { Typography } from "../../../shared/ui/base";
 import { TeamList } from "../../../widgets/team-list";
 

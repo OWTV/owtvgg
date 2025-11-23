@@ -7,6 +7,11 @@ export const Players: CollectionConfig = {
 		useAsTitle: "name",
 		defaultColumns: ["name", "role", "updatedAt"],
 	},
+	access: {
+		// Player entities are referenced in DraftRoster and PublishedRoster
+		// Deleting players would break the history
+		delete: () => false,
+	},
 	fields: [
 		{
 			name: "name",
@@ -23,6 +28,17 @@ export const Players: CollectionConfig = {
 				{ label: "Flex", value: "flex" },
 			],
 			required: true,
+		},
+		{
+			name: "isArchived",
+			type: "checkbox",
+			label: "Archived / Retired",
+			defaultValue: false,
+			admin: {
+				position: "sidebar",
+				description:
+					"Hide this player from new drafts without deleting history.",
+			},
 		},
 	],
 };

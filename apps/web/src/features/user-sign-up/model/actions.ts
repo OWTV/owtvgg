@@ -4,7 +4,7 @@ import { constants } from "node:http2";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { getServerSession } from "../../../entities/session";
+import { getServerSession } from "../../../entities/user-session";
 import type { ActionState } from "../../../shared/model";
 import { auth } from "../../../shared/model";
 import { SignupSchema } from "./schema";

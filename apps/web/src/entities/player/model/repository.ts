@@ -11,7 +11,9 @@ interface GetAllPlayersProps {
 	depth?: number;
 	sort?: keyof Player | string;
 	limit?: number;
+	includeArchived?: boolean;
 }
+
 export async function getAllPlayers({
 	depth = 0,
 	sort = "name",
@@ -22,6 +24,7 @@ export async function getAllPlayers({
 		depth,
 		sort,
 		limit,
+		where: { isArchived: { not_equals: true } },
 	});
 	return result.docs;
 }
@@ -30,9 +33,7 @@ export async function getPlayersByRole(role: Player["role"]) {
 	const result = await payload.find({
 		collection: "players",
 		where: {
-			role: {
-				equals: role,
-			},
+			and: [{ role: { equals: role } }, { isArchived: { not_equals: true } }],
 		},
 	});
 	return result.docs;
