@@ -1,0 +1,13 @@
+{
+	"name": "@owtvgg/faceit",
+	"module": "index.ts",
+	"main": "index.ts",
+	"types": "index.ts",
+	"type": "module",
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}
