@@ -1,17 +1,23 @@
 {
-  "name": "owtvgg",
-  "private": true,
-  "workspaces": ["apps/*", "packages/*"],
-  "scripts": {
-    "web:dev": "bun run --filter '@owtvgg/web' dev",
-    "web:build": "bun run --filter '@owtvgg/web' build",
-    "web:test": "bun run --filter '@owtvgg/web' test",
-    "web:start": "bun run --filter '@owtvgg/web' start",
-    "web:db": "bun run --filter '@owtvgg/web' payload",
-    "ci:test": "bun run --filter '*' test:ci",
-    "ci:check:lint": "bun run --filter '*' check:lint",
-    "ci:check:fsd": "bun run --filter '*' check:fsd",
-    "ci:check:tsc": "bun run --filter '*' check:tsc",
-    "postinstall": "lefthook install"
-  }
+	"name": "owtvgg",
+	"private": true,
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"scripts": {
+		"web:dev": "bun run --filter '@owtvgg/web' dev",
+		"web:build": "bun run --filter '@owtvgg/web' build",
+		"web:test": "bun run --filter '@owtvgg/web' test",
+		"web:start": "bun run --filter '@owtvgg/web' start",
+		"web:db": "bun run --filter '@owtvgg/web' payload",
+		"ci:test": "bun run --filter '*' test:ci",
+		"ci:check:lint": "bun run --filter '*' check:lint",
+		"ci:check:fsd": "bun run --filter '*' check:fsd",
+		"ci:check:tsc": "bun run --filter '*' check:tsc",
+		"postinstall": "lefthook install"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.7"
+	}
 }
