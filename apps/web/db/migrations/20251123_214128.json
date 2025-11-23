@@ -1,5 +1,5 @@
 {
-  "id": "6936f673-6b6b-46a6-9d9f-ac083810600e",
+  "id": "28b3f98f-c5d2-46a7-8335-5566e674cce2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1153,6 +1153,288 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.matches": {
+      "name": "matches",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "tournament_id": {
+          "name": "tournament_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "round_id": {
+          "name": "round_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "home_team_id": {
+          "name": "home_team_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "home_score": {
+          "name": "home_score",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "away_team_id": {
+          "name": "away_team_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "away_score": {
+          "name": "away_score",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "winner_id": {
+          "name": "winner_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "external_id": {
+          "name": "external_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "matches_tournament_idx": {
+          "name": "matches_tournament_idx",
+          "columns": [
+            {
+              "expression": "tournament_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "matches_round_idx": {
+          "name": "matches_round_idx",
+          "columns": [
+            {
+              "expression": "round_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "matches_home_team_idx": {
+          "name": "matches_home_team_idx",
+          "columns": [
+            {
+              "expression": "home_team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "matches_away_team_idx": {
+          "name": "matches_away_team_idx",
+          "columns": [
+            {
+              "expression": "away_team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "matches_winner_idx": {
+          "name": "matches_winner_idx",
+          "columns": [
+            {
+              "expression": "winner_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "matches_external_id_idx": {
+          "name": "matches_external_id_idx",
+          "columns": [
+            {
+              "expression": "external_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "matches_updated_at_idx": {
+          "name": "matches_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "matches_created_at_idx": {
+          "name": "matches_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "matches_tournament_id_tournaments_id_fk": {
+          "name": "matches_tournament_id_tournaments_id_fk",
+          "tableFrom": "matches",
+          "tableTo": "tournaments",
+          "columnsFrom": [
+            "tournament_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "matches_round_id_tournament_rounds_id_fk": {
+          "name": "matches_round_id_tournament_rounds_id_fk",
+          "tableFrom": "matches",
+          "tableTo": "tournament_rounds",
+          "columnsFrom": [
+            "round_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "matches_home_team_id_teams_id_fk": {
+          "name": "matches_home_team_id_teams_id_fk",
+          "tableFrom": "matches",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "home_team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "matches_away_team_id_teams_id_fk": {
+          "name": "matches_away_team_id_teams_id_fk",
+          "tableFrom": "matches",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "away_team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "matches_winner_id_teams_id_fk": {
+          "name": "matches_winner_id_teams_id_fk",
+          "tableFrom": "matches",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "winner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.published_rosters_roster_snapshot": {
       "name": "published_rosters_roster_snapshot",
       "schema": "",
@@ -1439,10 +1721,10 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "published_rosters_round_id_rounds_id_fk": {
-          "name": "published_rosters_round_id_rounds_id_fk",
+        "published_rosters_round_id_tournament_rounds_id_fk": {
+          "name": "published_rosters_round_id_tournament_rounds_id_fk",
           "tableFrom": "published_rosters",
-          "tableTo": "rounds",
+          "tableTo": "tournament_rounds",
           "columnsFrom": [
             "round_id"
           ],
@@ -1459,8 +1741,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.rounds": {
-      "name": "rounds",
+    "public.tournament_rounds": {
+      "name": "tournament_rounds",
       "schema": "",
       "columns": {
         "id": {
@@ -1515,8 +1797,8 @@
         }
       },
       "indexes": {
-        "rounds_tournament_idx": {
-          "name": "rounds_tournament_idx",
+        "tournament_rounds_tournament_idx": {
+          "name": "tournament_rounds_tournament_idx",
           "columns": [
             {
               "expression": "tournament_id",
@@ -1530,8 +1812,8 @@
           "method": "btree",
           "with": {}
         },
-        "rounds_updated_at_idx": {
-          "name": "rounds_updated_at_idx",
+        "tournament_rounds_updated_at_idx": {
+          "name": "tournament_rounds_updated_at_idx",
           "columns": [
             {
               "expression": "updated_at",
@@ -1545,8 +1827,8 @@
           "method": "btree",
           "with": {}
         },
-        "rounds_created_at_idx": {
-          "name": "rounds_created_at_idx",
+        "tournament_rounds_created_at_idx": {
+          "name": "tournament_rounds_created_at_idx",
           "columns": [
             {
               "expression": "created_at",
@@ -1562,9 +1844,9 @@
         }
       },
       "foreignKeys": {
-        "rounds_tournament_id_tournaments_id_fk": {
-          "name": "rounds_tournament_id_tournaments_id_fk",
-          "tableFrom": "rounds",
+        "tournament_rounds_tournament_id_tournaments_id_fk": {
+          "name": "tournament_rounds_tournament_id_tournaments_id_fk",
+          "tableFrom": "tournament_rounds",
           "tableTo": "tournaments",
           "columnsFrom": [
             "tournament_id"
@@ -1851,10 +2133,10 @@
         }
       },
       "foreignKeys": {
-        "tournament_players_price_history_round_id_rounds_id_fk": {
-          "name": "tournament_players_price_history_round_id_rounds_id_fk",
+        "tournament_players_price_history_round_id_tournament_rounds_id_fk": {
+          "name": "tournament_players_price_history_round_id_tournament_rounds_id_fk",
           "tableFrom": "tournament_players_price_history",
-          "tableTo": "rounds",
+          "tableTo": "tournament_rounds",
           "columnsFrom": [
             "round_id"
           ],
@@ -2582,14 +2864,20 @@
           "primaryKey": false,
           "notNull": false
         },
+        "matches_id": {
+          "name": "matches_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "published_rosters_id": {
           "name": "published_rosters_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "rounds_id": {
-          "name": "rounds_id",
+        "tournament_rounds_id": {
+          "name": "tournament_rounds_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -2755,6 +3043,21 @@
           "method": "btree",
           "with": {}
         },
+        "payload_locked_documents_rels_matches_id_idx": {
+          "name": "payload_locked_documents_rels_matches_id_idx",
+          "columns": [
+            {
+              "expression": "matches_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "payload_locked_documents_rels_published_rosters_id_idx": {
           "name": "payload_locked_documents_rels_published_rosters_id_idx",
           "columns": [
@@ -2770,11 +3073,11 @@
           "method": "btree",
           "with": {}
         },
-        "payload_locked_documents_rels_rounds_id_idx": {
-          "name": "payload_locked_documents_rels_rounds_id_idx",
+        "payload_locked_documents_rels_tournament_rounds_id_idx": {
+          "name": "payload_locked_documents_rels_tournament_rounds_id_idx",
           "columns": [
             {
-              "expression": "rounds_id",
+              "expression": "tournament_rounds_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2938,6 +3241,19 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+        "payload_locked_documents_rels_matches_fk": {
+          "name": "payload_locked_documents_rels_matches_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "matches",
+          "columnsFrom": [
+            "matches_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "payload_locked_documents_rels_published_rosters_fk": {
           "name": "payload_locked_documents_rels_published_rosters_fk",
           "tableFrom": "payload_locked_documents_rels",
@@ -2951,12 +3267,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "payload_locked_documents_rels_rounds_fk": {
-          "name": "payload_locked_documents_rels_rounds_fk",
+        "payload_locked_documents_rels_tournament_rounds_fk": {
+          "name": "payload_locked_documents_rels_tournament_rounds_fk",
           "tableFrom": "payload_locked_documents_rels",
-          "tableTo": "rounds",
+          "tableTo": "tournament_rounds",
           "columnsFrom": [
-            "rounds_id"
+            "tournament_rounds_id"
           ],
           "columnsTo": [
             "id"

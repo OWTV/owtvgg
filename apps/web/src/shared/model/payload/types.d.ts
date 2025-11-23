@@ -73,6 +73,7 @@ export interface Config {
     verifications: Verification;
     'admin-invitations': AdminInvitation;
     'draft-rosters': DraftRoster;
+    matches: Match;
     'published-rosters': PublishedRoster;
     'tournament-rounds': TournamentRound;
     tournaments: Tournament;
@@ -92,6 +93,7 @@ export interface Config {
     verifications: VerificationsSelect<false> | VerificationsSelect<true>;
     'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>;
     'draft-rosters': DraftRostersSelect<false> | DraftRostersSelect<true>;
+    matches: MatchesSelect<false> | MatchesSelect<true>;
     'published-rosters': PublishedRostersSelect<false> | PublishedRostersSelect<true>;
     'tournament-rounds': TournamentRoundsSelect<false> | TournamentRoundsSelect<true>;
     tournaments: TournamentsSelect<false> | TournamentsSelect<true>;
@@ -418,6 +420,34 @@ export interface TournamentRound {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "matches".
+ */
+export interface Match {
+  id: number;
+  tournament: number | Tournament;
+  round: number | TournamentRound;
+  /**
+   * When the match is scheduled to begin.
+   */
+  startTime: string;
+  /**
+   * If set, the match is considered finished.
+   */
+  completedAt?: string | null;
+  homeTeam: number | Team;
+  homeScore?: number | null;
+  awayTeam: number | Team;
+  awayScore?: number | null;
+  /**
+   * Optional: Explicitly mark the winner.
+   */
+  winner?: (number | null) | Team;
+  externalId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "published-rosters".
  */
 export interface PublishedRoster {
@@ -493,6 +523,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'draft-rosters';
         value: number | DraftRoster;
+      } | null)
+    | ({
+        relationTo: 'matches';
+        value: number | Match;
       } | null)
     | ({
         relationTo: 'published-rosters';
@@ -644,6 +678,24 @@ export interface DraftRostersSelect<T extends boolean = true> {
         isCaptain?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "matches_select".
+ */
+export interface MatchesSelect<T extends boolean = true> {
+  tournament?: T;
+  round?: T;
+  startTime?: T;
+  completedAt?: T;
+  homeTeam?: T;
+  homeScore?: T;
+  awayTeam?: T;
+  awayScore?: T;
+  winner?: T;
+  externalId?: T;
   updatedAt?: T;
   createdAt?: T;
 }

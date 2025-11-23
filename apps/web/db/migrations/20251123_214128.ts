@@ -40,6 +40,22 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
+  CREATE TABLE "matches" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"tournament_id" integer NOT NULL,
+  	"round_id" integer NOT NULL,
+  	"start_time" timestamp(3) with time zone NOT NULL,
+  	"completed_at" timestamp(3) with time zone,
+  	"home_team_id" integer NOT NULL,
+  	"home_score" numeric DEFAULT 0,
+  	"away_team_id" integer NOT NULL,
+  	"away_score" numeric DEFAULT 0,
+  	"winner_id" integer,
+  	"external_id" varchar,
+  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  );
+  
   CREATE TABLE "published_rosters_roster_snapshot" (
   	"_order" integer NOT NULL,
   	"_parent_id" integer NOT NULL,
@@ -59,7 +75,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
-  CREATE TABLE "rounds" (
+  CREATE TABLE "tournament_rounds" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"name" varchar NOT NULL,
   	"tournament_id" integer NOT NULL,
@@ -133,8 +149,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "draft_rosters_id" integer;
+  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "matches_id" integer;
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "published_rosters_id" integer;
-  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "rounds_id" integer;
+  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "tournament_rounds_id" integer;
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "tournaments_id" integer;
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "tournament_players_id" integer;
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "players_id" integer;
@@ -146,13 +163,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "draft_rosters_players" ADD CONSTRAINT "draft_rosters_players_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."draft_rosters"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "draft_rosters" ADD CONSTRAINT "draft_rosters_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "draft_rosters" ADD CONSTRAINT "draft_rosters_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "matches" ADD CONSTRAINT "matches_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "matches" ADD CONSTRAINT "matches_round_id_tournament_rounds_id_fk" FOREIGN KEY ("round_id") REFERENCES "public"."tournament_rounds"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "matches" ADD CONSTRAINT "matches_home_team_id_teams_id_fk" FOREIGN KEY ("home_team_id") REFERENCES "public"."teams"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "matches" ADD CONSTRAINT "matches_away_team_id_teams_id_fk" FOREIGN KEY ("away_team_id") REFERENCES "public"."teams"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "matches" ADD CONSTRAINT "matches_winner_id_teams_id_fk" FOREIGN KEY ("winner_id") REFERENCES "public"."teams"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "published_rosters_roster_snapshot" ADD CONSTRAINT "published_rosters_roster_snapshot_player_id_tournament_players_id_fk" FOREIGN KEY ("player_id") REFERENCES "public"."tournament_players"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "published_rosters_roster_snapshot" ADD CONSTRAINT "published_rosters_roster_snapshot_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."published_rosters"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "published_rosters" ADD CONSTRAINT "published_rosters_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "published_rosters" ADD CONSTRAINT "published_rosters_round_id_rounds_id_fk" FOREIGN KEY ("round_id") REFERENCES "public"."rounds"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "rounds" ADD CONSTRAINT "rounds_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "published_rosters" ADD CONSTRAINT "published_rosters_round_id_tournament_rounds_id_fk" FOREIGN KEY ("round_id") REFERENCES "public"."tournament_rounds"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "tournament_rounds" ADD CONSTRAINT "tournament_rounds_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "tournaments_roster_structure" ADD CONSTRAINT "tournaments_roster_structure_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."tournaments"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "tournament_players_price_history" ADD CONSTRAINT "tournament_players_price_history_round_id_rounds_id_fk" FOREIGN KEY ("round_id") REFERENCES "public"."rounds"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "tournament_players_price_history" ADD CONSTRAINT "tournament_players_price_history_round_id_tournament_rounds_id_fk" FOREIGN KEY ("round_id") REFERENCES "public"."tournament_rounds"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "tournament_players_price_history" ADD CONSTRAINT "tournament_players_price_history_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."tournament_players"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "tournament_players" ADD CONSTRAINT "tournament_players_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "tournament_players" ADD CONSTRAINT "tournament_players_player_id_players_id_fk" FOREIGN KEY ("player_id") REFERENCES "public"."players"("id") ON DELETE set null ON UPDATE no action;
@@ -173,6 +195,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "draft_rosters_updated_at_idx" ON "draft_rosters" USING btree ("updated_at");
   CREATE INDEX "draft_rosters_created_at_idx" ON "draft_rosters" USING btree ("created_at");
   CREATE UNIQUE INDEX "user_tournament_idx" ON "draft_rosters" USING btree ("user_id","tournament_id");
+  CREATE INDEX "matches_tournament_idx" ON "matches" USING btree ("tournament_id");
+  CREATE INDEX "matches_round_idx" ON "matches" USING btree ("round_id");
+  CREATE INDEX "matches_home_team_idx" ON "matches" USING btree ("home_team_id");
+  CREATE INDEX "matches_away_team_idx" ON "matches" USING btree ("away_team_id");
+  CREATE INDEX "matches_winner_idx" ON "matches" USING btree ("winner_id");
+  CREATE INDEX "matches_external_id_idx" ON "matches" USING btree ("external_id");
+  CREATE INDEX "matches_updated_at_idx" ON "matches" USING btree ("updated_at");
+  CREATE INDEX "matches_created_at_idx" ON "matches" USING btree ("created_at");
   CREATE INDEX "published_rosters_roster_snapshot_order_idx" ON "published_rosters_roster_snapshot" USING btree ("_order");
   CREATE INDEX "published_rosters_roster_snapshot_parent_id_idx" ON "published_rosters_roster_snapshot" USING btree ("_parent_id");
   CREATE INDEX "published_rosters_roster_snapshot_player_idx" ON "published_rosters_roster_snapshot" USING btree ("player_id");
@@ -182,9 +212,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "published_rosters_updated_at_idx" ON "published_rosters" USING btree ("updated_at");
   CREATE INDEX "published_rosters_created_at_idx" ON "published_rosters" USING btree ("created_at");
   CREATE UNIQUE INDEX "user_round_idx" ON "published_rosters" USING btree ("user_id","round_id");
-  CREATE INDEX "rounds_tournament_idx" ON "rounds" USING btree ("tournament_id");
-  CREATE INDEX "rounds_updated_at_idx" ON "rounds" USING btree ("updated_at");
-  CREATE INDEX "rounds_created_at_idx" ON "rounds" USING btree ("created_at");
+  CREATE INDEX "tournament_rounds_tournament_idx" ON "tournament_rounds" USING btree ("tournament_id");
+  CREATE INDEX "tournament_rounds_updated_at_idx" ON "tournament_rounds" USING btree ("updated_at");
+  CREATE INDEX "tournament_rounds_created_at_idx" ON "tournament_rounds" USING btree ("created_at");
   CREATE INDEX "tournaments_roster_structure_order_idx" ON "tournaments_roster_structure" USING btree ("_order");
   CREATE INDEX "tournaments_roster_structure_parent_id_idx" ON "tournaments_roster_structure" USING btree ("_parent_id");
   CREATE INDEX "tournaments_updated_at_idx" ON "tournaments" USING btree ("updated_at");
@@ -208,15 +238,17 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "teams_rels_path_idx" ON "teams_rels" USING btree ("path");
   CREATE INDEX "teams_rels_players_id_idx" ON "teams_rels" USING btree ("players_id");
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_draft_rosters_fk" FOREIGN KEY ("draft_rosters_id") REFERENCES "public"."draft_rosters"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_matches_fk" FOREIGN KEY ("matches_id") REFERENCES "public"."matches"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_published_rosters_fk" FOREIGN KEY ("published_rosters_id") REFERENCES "public"."published_rosters"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_rounds_fk" FOREIGN KEY ("rounds_id") REFERENCES "public"."rounds"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_tournament_rounds_fk" FOREIGN KEY ("tournament_rounds_id") REFERENCES "public"."tournament_rounds"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_tournaments_fk" FOREIGN KEY ("tournaments_id") REFERENCES "public"."tournaments"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_tournament_players_fk" FOREIGN KEY ("tournament_players_id") REFERENCES "public"."tournament_players"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_players_fk" FOREIGN KEY ("players_id") REFERENCES "public"."players"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_teams_fk" FOREIGN KEY ("teams_id") REFERENCES "public"."teams"("id") ON DELETE cascade ON UPDATE no action;
   CREATE INDEX "payload_locked_documents_rels_draft_rosters_id_idx" ON "payload_locked_documents_rels" USING btree ("draft_rosters_id");
+  CREATE INDEX "payload_locked_documents_rels_matches_id_idx" ON "payload_locked_documents_rels" USING btree ("matches_id");
   CREATE INDEX "payload_locked_documents_rels_published_rosters_id_idx" ON "payload_locked_documents_rels" USING btree ("published_rosters_id");
-  CREATE INDEX "payload_locked_documents_rels_rounds_id_idx" ON "payload_locked_documents_rels" USING btree ("rounds_id");
+  CREATE INDEX "payload_locked_documents_rels_tournament_rounds_id_idx" ON "payload_locked_documents_rels" USING btree ("tournament_rounds_id");
   CREATE INDEX "payload_locked_documents_rels_tournaments_id_idx" ON "payload_locked_documents_rels" USING btree ("tournaments_id");
   CREATE INDEX "payload_locked_documents_rels_tournament_players_id_idx" ON "payload_locked_documents_rels" USING btree ("tournament_players_id");
   CREATE INDEX "payload_locked_documents_rels_players_id_idx" ON "payload_locked_documents_rels" USING btree ("players_id");
@@ -230,9 +262,10 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   ALTER TABLE "users_rels" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "draft_rosters_players" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "draft_rosters" DISABLE ROW LEVEL SECURITY;
+  ALTER TABLE "matches" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "published_rosters_roster_snapshot" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "published_rosters" DISABLE ROW LEVEL SECURITY;
-  ALTER TABLE "rounds" DISABLE ROW LEVEL SECURITY;
+  ALTER TABLE "tournament_rounds" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "tournaments_roster_structure" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "tournaments" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "tournament_players_price_history" DISABLE ROW LEVEL SECURITY;
@@ -244,9 +277,10 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "users_rels" CASCADE;
   DROP TABLE "draft_rosters_players" CASCADE;
   DROP TABLE "draft_rosters" CASCADE;
+  DROP TABLE "matches" CASCADE;
   DROP TABLE "published_rosters_roster_snapshot" CASCADE;
   DROP TABLE "published_rosters" CASCADE;
-  DROP TABLE "rounds" CASCADE;
+  DROP TABLE "tournament_rounds" CASCADE;
   DROP TABLE "tournaments_roster_structure" CASCADE;
   DROP TABLE "tournaments" CASCADE;
   DROP TABLE "tournament_players_price_history" CASCADE;
@@ -256,9 +290,11 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "teams_rels" CASCADE;
   ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_draft_rosters_fk";
   
+  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_matches_fk";
+  
   ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_published_rosters_fk";
   
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_rounds_fk";
+  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_tournament_rounds_fk";
   
   ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_tournaments_fk";
   
@@ -269,16 +305,18 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_teams_fk";
   
   DROP INDEX "payload_locked_documents_rels_draft_rosters_id_idx";
+  DROP INDEX "payload_locked_documents_rels_matches_id_idx";
   DROP INDEX "payload_locked_documents_rels_published_rosters_id_idx";
-  DROP INDEX "payload_locked_documents_rels_rounds_id_idx";
+  DROP INDEX "payload_locked_documents_rels_tournament_rounds_id_idx";
   DROP INDEX "payload_locked_documents_rels_tournaments_id_idx";
   DROP INDEX "payload_locked_documents_rels_tournament_players_id_idx";
   DROP INDEX "payload_locked_documents_rels_players_id_idx";
   DROP INDEX "payload_locked_documents_rels_teams_id_idx";
   ALTER TABLE "users" ADD COLUMN "role" varchar DEFAULT 'user';
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "draft_rosters_id";
+  ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "matches_id";
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "published_rosters_id";
-  ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "rounds_id";
+  ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "tournament_rounds_id";
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "tournaments_id";
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "tournament_players_id";
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "players_id";

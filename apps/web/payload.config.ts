@@ -4,6 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { buildConfig } from "payload";
 import { betterAuthPlugin } from "payload-auth/better-auth";
 import sharp from "sharp";
+import { Matches } from "@/entities/match/model/collection";
 import { Players } from "@/entities/player/model/collection";
 import { DraftRosters } from "@/entities/roster-draft/model/collection";
 import { PublishedRosters } from "@/entities/roster-published/model/collection";
@@ -19,6 +20,7 @@ export default buildConfig({
 	editor: lexicalEditor(),
 	collections: [
 		DraftRosters,
+		Matches,
 		PublishedRosters,
 		TournamentRounds,
 		Tournaments,
