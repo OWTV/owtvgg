@@ -150,9 +150,9 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   /**
-   * The role of the user
+   * The role/ roles of the user
    */
-  role?: string | null;
+  role?: ('admin' | 'user')[] | null;
   favouritePlayers?: (number | Player)[] | null;
 }
 /**

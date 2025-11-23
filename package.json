@@ -4,8 +4,11 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"build": "bun run --filter @owtvgg/web build"
+		"web:build": "bun run --filter @owtvgg/web build",
+		"web:dev": "bun run --filter @owtvgg/web dev",
+		"web:check:ci": "bun run --filter @owtvgg/web check:ci",
+		"web:test:ci": "bun run --filter @owtvgg/web test:ci"
 	},
 	"workspaces": ["apps/*", "packages/*"]
 }
-  
+	

@@ -16,7 +16,7 @@ export default buildConfig({
 	secret,
 	debug: true,
 	db: postgresAdapter({
-		push: true,
+		push: false,
 		pool: { connectionString },
 		migrationDir: "db/migrations",
 	}),
