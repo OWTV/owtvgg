@@ -76,6 +76,7 @@ export interface Config {
     'published-rosters': PublishedRoster;
     rounds: Round;
     tournaments: Tournament;
+    'tournament-players': TournamentPlayer;
     players: Player;
     teams: Team;
     'payload-kv': PayloadKv;
@@ -94,6 +95,7 @@ export interface Config {
     'published-rosters': PublishedRostersSelect<false> | PublishedRostersSelect<true>;
     rounds: RoundsSelect<false> | RoundsSelect<true>;
     tournaments: TournamentsSelect<false> | TournamentsSelect<true>;
+    'tournament-players': TournamentPlayersSelect<false> | TournamentPlayersSelect<true>;
     players: PlayersSelect<false> | PlayersSelect<true>;
     teams: TeamsSelect<false> | TeamsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -313,7 +315,7 @@ export interface DraftRoster {
   isValid?: boolean | null;
   players?:
     | {
-        player: number | Player;
+        item: number | TournamentPlayer;
         /**
          * The role slot this player is fulfilling (e.g., 'tank', 'flex')
          */
@@ -352,31 +354,42 @@ export interface Tournament {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "published-rosters".
+ * via the `definition` "tournament-players".
  */
-export interface PublishedRoster {
+export interface TournamentPlayer {
   id: number;
-  user: number | User;
-  round: number | Round;
+  tournament: number | Tournament;
+  player: number | Player;
   /**
-   * The final calculated score for this round.
+   * The team they are playing for IN THIS tournament.
    */
-  totalScore?: number | null;
+  team: number | Team;
   /**
-   * Cached global rank for this round.
+   * Their locked role for this tournament.
    */
-  rank?: number | null;
-  rosterSnapshot?:
+  role: 'tank' | 'damage' | 'support';
+  /**
+   * The cost to draft this player RIGHT NOW (for the next open round).
+   */
+  currentPrice: number;
+  priceHistory?:
     | {
-        player: number | Player;
-        /**
-         * Points earned by this specific player in this round
-         */
-        score?: number | null;
-        isCaptain?: boolean | null;
+        round: number | Round;
+        price: number;
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "teams".
+ */
+export interface Team {
+  id: number;
+  name: string;
+  players?: (number | Player)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -405,12 +418,31 @@ export interface Round {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "teams".
+ * via the `definition` "published-rosters".
  */
-export interface Team {
+export interface PublishedRoster {
   id: number;
-  name: string;
-  players?: (number | Player)[] | null;
+  user: number | User;
+  round: number | Round;
+  /**
+   * The final calculated score for this round.
+   */
+  totalScore?: number | null;
+  /**
+   * Cached global rank for this round.
+   */
+  rank?: number | null;
+  rosterSnapshot?:
+    | {
+        player: number | TournamentPlayer;
+        /**
+         * Points earned by this specific player in this round
+         */
+        score?: number | null;
+        isCaptain?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -473,6 +505,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tournaments';
         value: number | Tournament;
+      } | null)
+    | ({
+        relationTo: 'tournament-players';
+        value: number | TournamentPlayer;
       } | null)
     | ({
         relationTo: 'players';
@@ -603,7 +639,7 @@ export interface DraftRostersSelect<T extends boolean = true> {
   players?:
     | T
     | {
-        player?: T;
+        item?: T;
         assignedRole?: T;
         isCaptain?: T;
         id?: T;
@@ -659,6 +695,26 @@ export interface TournamentsSelect<T extends boolean = true> {
     | {
         role?: T;
         count?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tournament-players_select".
+ */
+export interface TournamentPlayersSelect<T extends boolean = true> {
+  tournament?: T;
+  player?: T;
+  team?: T;
+  role?: T;
+  currentPrice?: T;
+  priceHistory?:
+    | T
+    | {
+        round?: T;
+        price?: T;
         id?: T;
       };
   updatedAt?: T;

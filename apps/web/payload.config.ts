@@ -8,6 +8,7 @@ import { DraftRosters } from "@/entities/roster-draft/model/collection";
 import { PublishedRosters } from "@/entities/roster-published/model/collection";
 import { Rounds } from "@/entities/round/model/collection";
 import { Tournaments } from "@/entities/tournament/model/collection";
+import { TournamentPlayers } from "@/entities/tournament-player/model/collection";
 import { Players } from "./src/entities/player/model/collection";
 import { Teams } from "./src/entities/team/model/collection";
 
@@ -21,6 +22,7 @@ export default buildConfig({
 		PublishedRosters,
 		Rounds,
 		Tournaments,
+		TournamentPlayers,
 		Players,
 		Teams,
 	],

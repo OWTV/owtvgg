@@ -64,7 +64,7 @@ export const PublishedRosters: CollectionConfig = {
 						{
 							name: "player",
 							type: "relationship",
-							relationTo: "players",
+							relationTo: "tournament-players",
 							required: true,
 						},
 						{

@@ -57,9 +57,9 @@ export const DraftRosters: CollectionConfig = {
 					type: "row",
 					fields: [
 						{
-							name: "player",
+							name: "item",
 							type: "relationship",
-							relationTo: "players",
+							relationTo: "tournament-players",
 							required: true,
 						},
 						{
