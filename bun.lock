@@ -5,6 +5,7 @@
       "name": "owtvgg",
       "devDependencies": {
         "@biomejs/biome": "^2.3.7",
+        "lefthook": "^2.0.4",
       },
     },
     "apps/web": {

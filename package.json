@@ -18,6 +18,7 @@
 		"postinstall": "lefthook install"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.3.7"
+		"@biomejs/biome": "^2.3.7",
+		"lefthook": "^2.0.4"
 	}
 }
