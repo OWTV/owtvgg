@@ -69,8 +69,6 @@ bunx payload migrate:create
 bunx payload generate:types
 ```
 
-> **Note:** New migrations are automatically applied during deployment.
-
 ---
 
 ## 🧪 Quality Assurance
